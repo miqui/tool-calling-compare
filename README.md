@@ -40,6 +40,6 @@ Python (from `openhands-py/`), all passed locally:
 ```
 uv sync
 uv run ruff check .                                   # All checks passed!
-uv run ruff format --check .                          # 2 files already formatted
-uv run python -m unittest discover -s tests           # Ran 1 test ... OK
+uv run ruff format --check .                          # 3 files already formatted
+uv run python -m unittest discover -s tests           # Ran 2 tests ... OK
 ```
