@@ -1,0 +1,102 @@
+{
+  "id": "tool-choice-forced",
+  "title": "Forced tool choice",
+  "description": "tool_choice forces a specific tool even though the prompt does not need one.",
+  "prompt": "Say hello.",
+  "tools": [
+    {
+      "name": "log_greeting",
+      "description": "Record a greeting.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "logged": true
+      }
+    },
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result_by_args": {
+        "Paris": {
+          "temp_c": 18,
+          "conditions": "cloudy"
+        },
+        "Tokyo": {
+          "temp_c": 24,
+          "conditions": "sunny"
+        }
+      }
+    }
+  ],
+  "features": [
+    "tool_choice=required",
+    "tool_choice=specific tool"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "log_greeting",
+        "arguments": {
+          "text": "hello"
+        }
+      }
+    ],
+    "steps": 2
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "log_greeting",
+          "arguments": {
+            "text": "hello"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "Hello!"
+    }
+  ],
+  "variants": [
+    {
+      "tool_choice": "required",
+      "expect": {
+        "first_step_has_tool_call": true
+      }
+    },
+    {
+      "tool_choice": {
+        "tool": "log_greeting"
+      },
+      "expect": {
+        "first_tool": "log_greeting"
+      }
+    }
+  ]
+}

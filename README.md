@@ -12,8 +12,7 @@ Both implement the same language-neutral scenarios so behaviour can be compared 
 ## Layout
 
 ```
-scenarios/        JSON specs: weather-lookup, file-write,
-                  approval-gated-action, loop-stop-conditions
+scenarios/        18 JSON specs + README.md (schema, scenario list)
 ai-sdk-ts/        Node 22 (.nvmrc), TypeScript strict, eslint, node:test
 openhands-py/     uv project, Python 3.12 (.python-version), ruff, unittest
 .github/workflows/ci.yml   jobs: lint-ts, lint-py (keyless)
@@ -41,6 +40,6 @@ Python (from `openhands-py/`), all passed locally:
 ```
 uv sync
 uv run ruff check .                                   # All checks passed!
-uv run ruff format --check .                          # 2 files already formatted
-uv run python -m unittest discover -s tests           # Ran 1 test ... OK
+uv run ruff format --check .                          # 3 files already formatted
+uv run python -m unittest discover -s tests           # Ran 2 tests ... OK
 ```

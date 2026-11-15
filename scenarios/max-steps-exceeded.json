@@ -1,0 +1,62 @@
+{
+  "id": "max-steps-exceeded",
+  "title": "Max steps exceeded",
+  "description": "Model keeps calling a tool; loop cap is hit before any final answer.",
+  "prompt": "Keep checking the queue until it is empty.",
+  "tools": [
+    {
+      "name": "check_queue",
+      "description": "Return queue length.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "length": 5
+      }
+    }
+  ],
+  "features": [
+    "max steps / loop cap"
+  ],
+  "stop_condition": "max_steps",
+  "expect": {
+    "stopped_by": "max_steps",
+    "tool_call_count": 3,
+    "steps": 3
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "check_queue",
+          "arguments": {}
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "check_queue",
+          "arguments": {}
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "check_queue",
+          "arguments": {}
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "max_steps": 3
+  }
+}

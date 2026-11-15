@@ -1,0 +1,50 @@
+{
+  "id": "max-output-tokens-truncation",
+  "title": "Max output tokens truncation",
+  "description": "Generation hits the output limit (finish_reason=length) in the middle of a tool call.",
+  "prompt": "Write a long report to report.txt.",
+  "tools": [
+    {
+      "name": "write_file",
+      "description": "Write a file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "ok": true
+      }
+    }
+  ],
+  "features": [
+    "finish_reason=length",
+    "truncated/partial tool call handling"
+  ],
+  "stop_condition": "truncated",
+  "expect": {
+    "stopped_by": "length",
+    "tool_call_count": 0,
+    "partial_tool_call_executed": false
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "length",
+      "text": "{\"path\":\"report.txt\",\"content\":\"Quarterly"
+    }
+  ],
+  "limits": {
+    "max_output_tokens": 16
+  }
+}
