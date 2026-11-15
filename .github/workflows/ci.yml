@@ -24,14 +24,22 @@ jobs:
       - run: npm test
   lint-py:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: openhands-py
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: uv python install
-      - run: uv sync
-      - run: uv run ruff check .
-      - run: uv run ruff format --check .
-      - run: uv run python -m unittest discover -s tests -v
+      - name: openhands-py
+        working-directory: openhands-py
+        run: |
+          uv python install
+          uv sync
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run python -m unittest discover -s tests -v
+      - name: crewai-py
+        working-directory: crewai-py
+        run: |
+          uv python install
+          uv sync
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run python -m unittest discover -s tests -v
