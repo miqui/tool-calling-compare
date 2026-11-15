@@ -1,0 +1,64 @@
+{
+  "id": "tool-throws-error",
+  "title": "Tool throws error",
+  "description": "Tool executor raises; the exception becomes a tool error result and the loop continues.",
+  "prompt": "Fetch the status page.",
+  "tools": [
+    {
+      "name": "fetch_url",
+      "description": "Fetch a URL.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "mock_error": {
+        "message": "connection refused"
+      }
+    }
+  ],
+  "features": [
+    "executor exception handling",
+    "error result fed back"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "fetch_url",
+        "arguments": {
+          "url": "https://status.example.com"
+        }
+      }
+    ],
+    "tool_errors": 1,
+    "steps": 2,
+    "final_answer_contains": [
+      "refused"
+    ]
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "fetch_url",
+          "arguments": {
+            "url": "https://status.example.com"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "The fetch failed: connection refused."
+    }
+  ]
+}

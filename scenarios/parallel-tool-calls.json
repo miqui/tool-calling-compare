@@ -1,0 +1,84 @@
+{
+  "id": "parallel-tool-calls",
+  "title": "Parallel tool calls",
+  "description": "Two independent lookups issued in one assistant turn.",
+  "prompt": "Compare the weather in Paris and Tokyo.",
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result_by_args": {
+        "Paris": {
+          "temp_c": 18,
+          "conditions": "cloudy"
+        },
+        "Tokyo": {
+          "temp_c": 24,
+          "conditions": "sunny"
+        }
+      }
+    }
+  ],
+  "features": [
+    "parallel tool calls",
+    "multiple results in one step"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Paris"
+        }
+      },
+      {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Tokyo"
+        }
+      }
+    ],
+    "tool_calls_ordering": "unordered",
+    "steps": 2,
+    "final_answer_contains": [
+      "18",
+      "24"
+    ]
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "get_weather",
+          "arguments": {
+            "city": "Paris"
+          }
+        },
+        {
+          "name": "get_weather",
+          "arguments": {
+            "city": "Tokyo"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "Paris 18C cloudy; Tokyo 24C sunny."
+    }
+  ]
+}

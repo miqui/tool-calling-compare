@@ -1,0 +1,101 @@
+{
+  "id": "sequential-dependent-calls",
+  "title": "Sequential dependent calls",
+  "description": "Output of call 1 feeds the argument of call 2.",
+  "prompt": "Find the user with email ada@example.com and fetch their latest order.",
+  "tools": [
+    {
+      "name": "find_user",
+      "description": "Look up a user id by email.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "user_id": "u_42"
+      }
+    },
+    {
+      "name": "get_latest_order",
+      "description": "Get latest order for a user id.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "order_id": "o_900",
+        "total": 57.5
+      }
+    }
+  ],
+  "features": [
+    "multi-step loop",
+    "result-to-argument dataflow"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "find_user",
+        "arguments": {
+          "email": "ada@example.com"
+        }
+      },
+      {
+        "name": "get_latest_order",
+        "arguments": {
+          "user_id": "u_42"
+        }
+      }
+    ],
+    "tool_calls_ordering": "ordered",
+    "steps": 3,
+    "final_answer_contains": [
+      "o_900"
+    ]
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "find_user",
+          "arguments": {
+            "email": "ada@example.com"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "get_latest_order",
+          "arguments": {
+            "user_id": "u_42"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "Latest order is o_900 ($57.5)."
+    }
+  ]
+}

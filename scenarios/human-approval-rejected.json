@@ -1,0 +1,70 @@
+{
+  "id": "human-approval-rejected",
+  "title": "Human approval rejected",
+  "description": "Approval hook rejects a sensitive call; tool is not executed and the model acknowledges.",
+  "prompt": "Send $500 to account 123.",
+  "tools": [
+    {
+      "name": "transfer_funds",
+      "description": "Transfer money.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "account",
+          "amount"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "ok": true
+      },
+      "requires_approval": true
+    }
+  ],
+  "features": [
+    "human-in-the-loop approval",
+    "denial fed back"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "transfer_funds",
+        "arguments": {
+          "account": "123",
+          "amount": 500
+        }
+      }
+    ],
+    "executed_tool_calls": [],
+    "approval": "deny",
+    "final_answer_mentions_denial": true
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "transfer_funds",
+          "arguments": {
+            "account": "123",
+            "amount": 500
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "The transfer was denied, so I did not send it."
+    }
+  ],
+  "approval": "deny"
+}

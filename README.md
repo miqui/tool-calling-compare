@@ -12,8 +12,7 @@ Both implement the same language-neutral scenarios so behaviour can be compared 
 ## Layout
 
 ```
-scenarios/        JSON specs: weather-lookup, file-write,
-                  approval-gated-action, loop-stop-conditions
+scenarios/        18 JSON specs + README.md (schema, scenario list)
 ai-sdk-ts/        Node 22 (.nvmrc), TypeScript strict, eslint, node:test
 openhands-py/     uv project, Python 3.12 (.python-version), ruff, unittest
 .github/workflows/ci.yml   jobs: lint-ts, lint-py (keyless)

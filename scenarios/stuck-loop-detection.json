@@ -1,0 +1,76 @@
+{
+  "id": "stuck-loop-detection",
+  "title": "Stuck loop detection",
+  "description": "Repeated identical tool call triggers loop/stuck detection and stops the run.",
+  "prompt": "Open the settings page.",
+  "tools": [
+    {
+      "name": "click",
+      "description": "Click a UI element.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "ok": false,
+        "error": "element not found"
+      }
+    }
+  ],
+  "features": [
+    "stuck-loop / repeated-action detection"
+  ],
+  "stop_condition": "stuck_detected",
+  "expect": {
+    "stopped_by": "stuck_detected",
+    "repeat_threshold": 3,
+    "tool_call_count": 3
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "click",
+          "arguments": {
+            "target": "#settings"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "click",
+          "arguments": {
+            "target": "#settings"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "click",
+          "arguments": {
+            "target": "#settings"
+          }
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "repeat_threshold": 3,
+    "max_steps": 10
+  }
+}

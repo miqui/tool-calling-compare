@@ -1,0 +1,74 @@
+{
+  "id": "streaming-tool-events",
+  "title": "Streaming tool events",
+  "description": "Streamed run emits ordered events for text, tool-call, tool-result and finish.",
+  "prompt": "What is the weather in Paris?",
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result_by_args": {
+        "Paris": {
+          "temp_c": 18,
+          "conditions": "cloudy"
+        },
+        "Tokyo": {
+          "temp_c": 24,
+          "conditions": "sunny"
+        }
+      }
+    }
+  ],
+  "features": [
+    "streaming",
+    "tool event ordering"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Paris"
+        }
+      }
+    ],
+    "steps": 2,
+    "event_order": [
+      "tool-call",
+      "tool-result",
+      "text-delta",
+      "finish"
+    ]
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "get_weather",
+          "arguments": {
+            "city": "Paris"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "18C and cloudy."
+    }
+  ],
+  "streaming": true
+}

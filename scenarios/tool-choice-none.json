@@ -1,0 +1,50 @@
+{
+  "id": "tool-choice-none",
+  "title": "Tool choice none",
+  "description": "Tools are defined but tool_choice=none forbids calling them.",
+  "prompt": "What is the weather in Paris?",
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result_by_args": {
+        "Paris": {
+          "temp_c": 18,
+          "conditions": "cloudy"
+        },
+        "Tokyo": {
+          "temp_c": 24,
+          "conditions": "sunny"
+        }
+      }
+    }
+  ],
+  "features": [
+    "tool_choice=none"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [],
+    "steps": 1,
+    "tool_call_count": 0
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "stop",
+      "text": "I can't look that up right now."
+    }
+  ],
+  "tool_choice": "none"
+}

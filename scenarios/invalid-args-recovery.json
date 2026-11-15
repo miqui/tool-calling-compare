@@ -1,0 +1,88 @@
+{
+  "id": "invalid-args-recovery",
+  "title": "Invalid args recovery",
+  "description": "Model sends args violating the schema; validation error is fed back and the model retries.",
+  "prompt": "Set a timer for 5 minutes.",
+  "tools": [
+    {
+      "name": "set_timer",
+      "description": "Set a timer.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "minutes": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "minutes"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result": {
+        "timer_id": "t1"
+      }
+    }
+  ],
+  "features": [
+    "argument schema validation",
+    "error fed back to model",
+    "retry"
+  ],
+  "stop_condition": "final_answer",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "set_timer",
+        "arguments": {
+          "minutes": "five"
+        }
+      },
+      {
+        "name": "set_timer",
+        "arguments": {
+          "minutes": 5
+        }
+      }
+    ],
+    "executed_tool_calls": [
+      {
+        "name": "set_timer",
+        "arguments": {
+          "minutes": 5
+        }
+      }
+    ],
+    "validation_errors": 1,
+    "steps": 3
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "set_timer",
+          "arguments": {
+            "minutes": "five"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "set_timer",
+          "arguments": {
+            "minutes": 5
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "Timer set for 5 minutes."
+    }
+  ]
+}

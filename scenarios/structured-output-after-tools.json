@@ -1,0 +1,87 @@
+{
+  "id": "structured-output-after-tools",
+  "title": "Structured output after tools",
+  "description": "After tool use the final answer must conform to a JSON schema.",
+  "prompt": "Get the weather in Paris and return it as structured data.",
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      },
+      "mock_result_by_args": {
+        "Paris": {
+          "temp_c": 18,
+          "conditions": "cloudy"
+        },
+        "Tokyo": {
+          "temp_c": 24,
+          "conditions": "sunny"
+        }
+      }
+    }
+  ],
+  "features": [
+    "structured output",
+    "tools then schema-constrained answer"
+  ],
+  "stop_condition": "structured_output",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "get_weather",
+        "arguments": {
+          "city": "Paris"
+        }
+      }
+    ],
+    "steps": 2,
+    "final_output": {
+      "city": "Paris",
+      "temp_c": 18
+    }
+  },
+  "mock_llm_script": [
+    {
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "get_weather",
+          "arguments": {
+            "city": "Paris"
+          }
+        }
+      ]
+    },
+    {
+      "finish_reason": "stop",
+      "text": "{\"city\":\"Paris\",\"temp_c\":18}"
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "city": {
+        "type": "string"
+      },
+      "temp_c": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "city",
+      "temp_c"
+    ],
+    "additionalProperties": false
+  }
+}
