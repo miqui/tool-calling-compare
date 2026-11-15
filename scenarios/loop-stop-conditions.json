@@ -1,0 +1,10 @@
+{
+  "id": "loop-stop-conditions",
+  "description": "Agent loop must terminate via max steps or a stop condition when the tool never yields a final answer.",
+  "prompt": "Keep calling poll_status until it reports 'done'.",
+  "tools": [
+    {"name": "poll_status", "parameters": {}, "mock_result_sequence": ["pending", "pending", "pending", "done"]}
+  ],
+  "limits": {"max_steps": 3},
+  "expect": {"stopped_by": "max_steps", "tool_call_count": 3}
+}

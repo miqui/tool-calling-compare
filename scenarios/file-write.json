@@ -1,0 +1,9 @@
+{
+  "id": "file-write",
+  "description": "Model must write a file via write_file tool inside a sandbox directory.",
+  "prompt": "Create notes.txt containing the text 'hello world'.",
+  "tools": [
+    {"name": "write_file", "parameters": {"path": "string", "content": "string"}}
+  ],
+  "expect": {"tool_calls": [{"name": "write_file", "arguments": {"path": "notes.txt", "content": "hello world"}}], "side_effects": [{"file": "notes.txt", "equals": "hello world"}]}
+}

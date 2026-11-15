@@ -1,0 +1,9 @@
+{
+  "id": "weather-lookup",
+  "description": "Model must call get_weather for a city and answer using the result.",
+  "prompt": "What is the weather in Paris right now?",
+  "tools": [
+    {"name": "get_weather", "parameters": {"city": "string"}, "mock_result": {"city": "Paris", "temp_c": 18, "conditions": "cloudy"}}
+  ],
+  "expect": {"tool_calls": [{"name": "get_weather", "arguments": {"city": "Paris"}}], "final_answer_contains": ["18"]}
+}
